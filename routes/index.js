@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var mongojs = require('mongojs');
-var db4 = mongojs('mongodb://zhiguo:zhiguowang1207@ds137230.mlab.com:37230/mytasklist_zhiguo', ['testData']);
+var db = mongojs('mongodb://zhiguo:zhiguowang1207@ds137230.mlab.com:37230/mytasklist_zhiguo', ['testData']);
 
 
 /* GET home page. */
