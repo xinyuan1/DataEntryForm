@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title> Data Entry Page </title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <style>
+    body {
+      background-color: #eee;
+    }
+
+    .container {
+      background-color: azure;
+    }
+  </style>
+</head>
+<body ng-app="myApp">
+<div class="container" ng-controller="myCtrl">
+  <h1 class="text-center" style="margin-top: 1.5rem"> Test Data </h1>
+
+  <form method="POST"  action="/">
+    <div class="form-group">
+      <label for="MCC"> MCC </label>
+      <input type="number" class="form-control" id="MCC" name="MCC" placeholder="5812" required>
+    </div>
+
+    <div class="form-group">
+      <label for="city"> City </label>
+      <input type="text" class="form-control" id="city" name="City" placeholder="Austin" required>
+    </div>
+
+    <div class="form-group">
+      <label for="state"> State </label>
+      <input type="text" class="form-control" id="state" name="State"  placeholder="TX" required>
+    </div>
+
+    <div class="form-group">
+      <label for="zip"> Zip </label>
+      <input type="number" class="form-control" id="zip" name="ZIP" placeholder="78613" required>
+    </div>
+
+    <div class="form-group">
+      <label for="fee"> Fees in $ </label>
+      <input type="number" ng-model="fee" ng-change="calc()" class="form-control" id="fee" name="Fee" placeholder="200" required>
+    </div>
+
+    <div class="form-group">
+      <label for="volume"> Volume in $ </label>
+      <input type="number" ng-model="volume" ng-change="calc()" class="form-control" id="volume" name="Volume" placeholder="100000" required>
+    </div>
+
+    <div class="form-group">
+      <label for="er"> Effective Rate </label>
+      <input type="text" ng-model="er" class="form-control" id="er" name="Effectiverates" placeholder="2.5%" required>
+    </div>
+
+    <br>
+
+    <div class="row">
+      <div class="col-md-4 offset-md-4">
+        <button type="submit" class="btn btn-lg btn-outline-primary"> Submit </button>
+        <button id="link" type="reset" class="btn btn-lg btn-outline-secondary"> Reset &nbsp </button>
+      </div>
+
+    </div>
+
+    <br>
+    <br>
+  </form>
+</div>
+
+<script src="js/angular.min.js"></script>
+<script src='https://code.jquery.com/jquery-1.12.4.js'></script>
+<script>
+
+    $('#link').click(function(){
+        $("html, body").animate({ scrollTop: 0 }, 50);
+        $('#MCC').val('');
+        $('#city').val('');
+        $('#state').val('');
+        $('#zip').val('');
+        $('#fee').val('');
+        $('#volume').val('');
+        $('#er').val('');
+
+        return false;
+    });
+
+    var app = angular.module('myApp', []);
+
+    app.controller('myCtrl', function($scope, $http) {
+        $scope.calc = () => {
+            if($scope.fee >= 0 && $scope.volume > 0) {
+                $scope.er = $scope.fee / $scope.volume * 100;
+                $scope.er = $scope.er.toString() + "%";
+            }
+            else {
+                $scope.er = '';
+            }
+        }
+    });
+</script>
+</body>
+</html>
