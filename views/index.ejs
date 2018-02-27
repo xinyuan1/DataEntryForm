@@ -7,42 +7,116 @@
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <style>
     body {
-      background-color: #eee;
+      background: aliceblue;
     }
 
     .container {
-      background-color: azure;
+      background: rgba(233, 240, 252, .8);
     }
   </style>
+
+  <style>
+    table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+      background-color: white !important;
+    }
+
+    td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+
+    tr:nth-child(even) {
+      background-color: #dddddd;
+    }
+  </style>
+
+    <script>
+
+       function onchangeFun(){
+
+          document.getElementById("formMCC").action="/";
+          document.getElementById("formMCC").submit();
+
+         }
+
+
+    </script>
+
 </head>
 <body ng-app="myApp">
 <div class="container" ng-controller="myCtrl">
   <h1 class="text-center" style="margin-top: 1.5rem"> Test Data </h1>
+  <br>
+  <label for="Categ"> MCC Categories </label>
+  <select class="form-control custom-select" ng-model="sel_attr" ng-options="attr for attr in mccCategories"
+          value="{{attr}}" ng-change="Category()" id="Categ">
+  </select>
 
-  <form method="POST"  action="/">
+  <label for="mcc"> MCC </label>
+
+ <form id="formMCC" >
+   <select class="form-control custom-select" name="Mcc" id="mcc"  ng-model="mccCodes" ng-required="mccCodes == ''
+        || mccCodes == undefined"  onchange="onchangeFun()">
+    <option ng:repeat="mccCode in mccList" value="{{mccCode}}">
+      {{mccCode}}
+
+
+    </option>
+  </select>
+ </form>
+
+  <br>
+  <br>
+
+  <table width="100%" class="table">
+    <thead>
+    <tr>
+      <th> ID </th>
+      <th> Date </th>
+      <th> MCC </th>
+      <th> ZIP </th>
+      <th> Volume </th>
+      <th> Effectiverates </th>
+    </tr>
+    <% data.forEach(function(datas){%>
+    <tr>
+      <td><%=datas['_id']%> </td>
+      <td><%=datas['Date']%></td>
+      <td><%=datas['MCC']%></td>
+      <td><%=datas['ZIP']%></td>
+      <td><%=datas['Volume']%></td>
+      <td><%=datas['Effectiverates']%></td>
+        <%});%>
+    </tr>
+
+    </thead>
+    <tbody>
+    <tr ng-repeat="row in MyRecCollection | filter:searchText">
+      <td ng-repeat="cell in row">{{cell}}</td>
+    </tr>
+    </tbody>
+  </table>
+
+  <h1 class="text-center" style="margin-top: 1.5rem"> Entry </h1>
+
+  <form method="POST" action="/insert">
+    <div class="form-group">
+      <label for="date"> Date </label>
+      <input type="date" class="form-control" id="date" name="Date" required>
+    </div>
+
     <div class="form-group">
       <label for="MCC"> MCC </label>
       <input type="number" class="form-control" id="MCC" name="MCC" placeholder="5812" required>
     </div>
 
     <div class="form-group">
-      <label for="city"> City </label>
-      <input type="text" class="form-control" id="city" name="City" placeholder="Austin" required>
-    </div>
-
-    <div class="form-group">
-      <label for="state"> State </label>
-      <input type="text" class="form-control" id="state" name="State"  placeholder="TX" required>
-    </div>
-
-    <div class="form-group">
       <label for="zip"> Zip </label>
-      <input type="number" class="form-control" id="zip" name="ZIP" placeholder="78613" required>
-    </div>
-
-    <div class="form-group">
-      <label for="fee"> Fees in $ </label>
-      <input type="number" ng-model="fee" ng-change="calc()" class="form-control" id="fee" name="Fee" placeholder="200" required>
+      <input type="number" class="form-control" id="zip" placeholder="78613" name="ZIP" required>
     </div>
 
     <div class="form-group">
@@ -52,53 +126,86 @@
 
     <div class="form-group">
       <label for="er"> Effective Rate </label>
-      <input type="text" ng-model="er" class="form-control" id="er" name="Effectiverates" placeholder="2.5%" required>
+      <input type="text" ng-model="er" class="form-control" id="er" placeholder="2.5%" name="Effectiverates" required>
     </div>
 
     <br>
 
     <div class="row">
-      <div class="col-md-4 offset-md-4">
-        <button type="submit" class="btn btn-lg btn-outline-primary"> Submit </button>
+      <div class="col-md-8 offset-md-4 col-xs-12">
+        <button type="submit" class="btn btn-lg btn-outline-success"> Add Info </button>
         <button id="link" type="reset" class="btn btn-lg btn-outline-secondary"> Reset &nbsp </button>
       </div>
-
     </div>
+  </form>
+
+  <form id = "formDelete" method="POST" action="/users">
+    <div class="form-group">
+      <label for="id"> ID </label>
+      <input type="text" class="form-control" id="id" name="id" placeholder="">
+    </div>
+    <button type="submit" class="btn btn-block btn-outline-danger"> Delete Info </button>
+  </form>
 
     <br>
     <br>
-  </form>
+
+
 </div>
 
-<script src="js/angular.min.js"></script>
 <script src='https://code.jquery.com/jquery-1.12.4.js'></script>
 <script>
 
     $('#link').click(function(){
         $("html, body").animate({ scrollTop: 0 }, 50);
         $('#MCC').val('');
-        $('#city').val('');
-        $('#state').val('');
         $('#zip').val('');
-        $('#fee').val('');
+        $('#date').val('');
         $('#volume').val('');
         $('#er').val('');
+        $('#Categ').val('');
+        $('#mcc').val('');
 
         return false;
     });
 
-    var app = angular.module('myApp', []);
+</script>
+<script src="angular.min.js"></script>
+<script>
+    const app = angular.module('myApp', []);
 
     app.controller('myCtrl', function($scope, $http) {
-        $scope.calc = () => {
-            if($scope.fee >= 0 && $scope.volume > 0) {
-                $scope.er = $scope.fee / $scope.volume * 100;
-                $scope.er = $scope.er.toString() + "%";
+        $http.get("https://api.jsonbin.io/b/5a6f4a7a4240d0776a228983").then(function(response) {
+            $scope.mccData = response.data;
+            // console.log($scope.mccData);
+            const categories = [];
+            const mccCodeV = {};
+            for (let i = 0; i < $scope.mccData.length; i++) {
+                if (categories.indexOf($scope.mccData[i]["AMEX Industry"].trim()) > -1) {
+                    let tmp = [];
+                    tmp = mccCodeV[$scope.mccData[i]["AMEX Industry"].trim()];
+                    if (tmp.indexOf(`${$scope.mccData[i]["MCC"]} - ${$scope.mccData[i]["MCC DESCRIPTION"].trim()}`) > -1) {
+
+                    }
+                    else {
+                        tmp.push(`${$scope.mccData[i]["MCC"]} - ${$scope.mccData[i]["MCC DESCRIPTION"].trim()}`)
+                    }
+                    mccCodeV[$scope.mccData[i]["AMEX Industry"].trim()] = tmp
+                } else {
+                    categories.push($scope.mccData[i]["AMEX Industry"].trim());
+                    let tmp = [];
+                    tmp.push(`${$scope.mccData[i]["MCC"]} - ${$scope.mccData[i]["MCC DESCRIPTION"].trim()}`);
+                    mccCodeV[$scope.mccData[i]["AMEX Industry"].trim()] = tmp
+                }
             }
-            else {
-                $scope.er = '';
-            }
-        }
+            categories.sort();
+            $scope.mccCategories = categories;
+            $scope.mccV = mccCodeV;
+        });
+
+        $scope.Category = () => {
+            $scope.mccList = $scope.mccV[$scope.sel_attr];
+        };
     });
 </script>
 </body>

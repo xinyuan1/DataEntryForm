@@ -1,0 +1,40 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <title>PageJump</title>
+
+</head>
+
+<body>
+
+<script type="text/javascript">
+
+    var t = 1;
+
+    setInterval("refer()", 1000); // start timer
+
+    function refer(){
+
+        if (t == 0) {
+
+            location = "/"; // set jump path
+
+        }
+
+        //document.getElementById('remind').innerHTML = "Item Deleted successfully;
+        document.getElementById('show').innerHTML = "" + t + " return to the form page"; // display backwards count
+
+        t--; // decrement time
+
+    }
+
+</script>
+<h1 id="remind" style="text-align: center;">Item inserted successfully!</h1>
+<p  id="show" style="text-align: center;"></p>
+
+</body>
+
+</html>
